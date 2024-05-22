@@ -6,18 +6,18 @@ import { UserService } from '../user/user.service'
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-	constructor(
-		private readonly userService: UserService,
-		private readonly configService: ConfigService
-	) {
-		super({
-			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-			ignoreExpiration: true,
-			secretOrKey: configService.get('JWT_SECRET')
-		})
-	}
+  constructor(
+    private readonly userService: UserService,
+    private readonly configService: ConfigService
+  ) {
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ignoreExpiration: true,
+      secretOrKey: configService.get('JWT_SECRET')
+    })
+  }
 
-	async validate({ id }: { id: string }) {
-		return this.userService.getById(id)
-	}
+  async validate({ id }: { id: string }) {
+    return this.userService.getById(id)
+  }
 }
