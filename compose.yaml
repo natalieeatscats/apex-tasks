@@ -22,3 +22,13 @@ services:
       interval: 3s
       timeout: 5s
       retries: 5
+  client:
+    build: ./packages/client
+    working_dir: /app
+    volumes:
+      - ./packages/client:/app
+      - /app/node_modules
+    command: >
+      sh -c "yarn run dev --host"
+    ports:
+      - "5173:5173"
