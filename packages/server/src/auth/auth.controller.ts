@@ -6,16 +6,27 @@ import {
   Req,
   Res,
   UnauthorizedException,
+  UseGuards,
   UsePipes,
   ValidationPipe
 } from '@nestjs/common'
 import { AuthService } from './auth.service'
-import { AuthDto } from './dto/auth.dto'
-import { Response, Request } from 'express'
+import { AuthDto, RegisterDto } from './dto/auth.dto'
+import { Request, Response } from 'express'
+import { AuthGuard } from './auth.guard'
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @UsePipes(new ValidationPipe())
+  @UseGuards(AuthGuard)
+  @HttpCode(200)
+  @Post('login/remember')
+  async remember(@Req() req: Request) {
+    const id = req['actorId']
+    return this.authService.remember(id)
+  }
 
   @UsePipes(new ValidationPipe())
   @HttpCode(200)
@@ -31,7 +42,7 @@ export class AuthController {
   @HttpCode(200)
   @Post('register')
   async register(
-    @Body() dto: AuthDto,
+    @Body() dto: RegisterDto,
     @Res({ passthrough: true }) res: Response
   ) {
     const { refreshToken, ...response } = await this.authService.register(dto)

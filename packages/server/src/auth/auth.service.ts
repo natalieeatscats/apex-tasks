@@ -6,19 +6,25 @@ import {
 } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { UserService } from '../user/user.service'
-import { AuthDto } from './dto/auth.dto'
+import { AuthDto, RegisterDto } from './dto/auth.dto'
 import { verify } from 'argon2'
 import { Response } from 'express'
 
 @Injectable()
 export class AuthService {
   EXPIRE_DAY_REFRESH_TOKEN = 1
-  REFRESH_TOKEN_NAME = 'refresh_token'
+  REFRESH_TOKEN_NAME = 'apex-tasks-refresh_token'
 
   constructor(
     private jwt: JwtService,
     private userService: UserService
   ) {}
+
+  async remember(id: string) {
+    const user = await this.userService.getById(id)
+    const tokens = this.issueTokens(user.id)
+    return { user, ...tokens }
+  }
 
   async login(dto: AuthDto) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -28,7 +34,7 @@ export class AuthService {
     return { user, ...tokens }
   }
 
-  async register(dto: AuthDto) {
+  async register(dto: RegisterDto) {
     const oldUser = await this.userService.getByEmail(dto.email)
     if (oldUser) throw new BadRequestException('User already exists')
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
