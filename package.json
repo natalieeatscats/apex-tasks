@@ -1,0 +1,17 @@
+{
+  "name": "apex-tasks",
+  "workspaces": [
+    "packages/*"
+  ],
+  "version": "1.0.0",
+  "scripts": {
+    "prisma": "yarn workspace @apex-tasks/server pnpify prisma generate"
+  },
+  "main": "index.js",
+  "author": "Natalia Popova <93385001+natalieeatscats@users.noreply.github.com>",
+  "license": "MIT",
+  "packageManager": "yarn@4.2.2",
+  "dependencies": {
+    "@yarnpkg/pnpify": "^4.1.0"
+  }
+}
