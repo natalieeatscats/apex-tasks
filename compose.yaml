@@ -31,4 +31,4 @@ services:
     command: >
       sh -c "yarn run dev --host"
     ports:
-      - "5173:5173"
+      - "80:80"

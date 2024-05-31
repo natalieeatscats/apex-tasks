@@ -1,5 +1,6 @@
 {
   "name": "apex-tasks",
+  "private": true,
   "workspaces": [
     "packages/*"
   ],

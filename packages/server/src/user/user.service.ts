@@ -19,10 +19,10 @@ export class UserService {
 
   async getAll() {
     const res = await this.prisma.user.findMany()
-    res.forEach((user) => {
-      delete user.password
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    return res.map(({ password, ...user }) => {
+      return user
     })
-    return res
   }
 
   async getById(id: string) {

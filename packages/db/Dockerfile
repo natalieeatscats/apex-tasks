@@ -1,5 +1,4 @@
-FROM postgres
+FROM rapidfort/postgresql
 ENV POSTGRES_PASSWORD=12345
 ENV POSTGRES_USER=postgres
 ENV POSTGRES_DB=apex-tasks-db
-EXPOSE 5432
