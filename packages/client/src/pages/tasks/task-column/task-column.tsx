@@ -48,7 +48,7 @@ function TaskColumn({
       >
         <div className="container">
           <Space direction={'vertical'} style={{ width: '100%' }}>
-            {tasks.map((task) => (
+            {tasksFiltered.map((task) => (
               <TaskCard task={task}></TaskCard>
             ))}
           </Space>
