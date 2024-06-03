@@ -131,7 +131,7 @@ function App() {
                     subTitle="Sorry, the page you visited does not exist."
                     extra={
                       <Button type="primary">
-                        <Link to={'/project'}>To Overview</Link>
+                        <Link to={'/'}>To Overview</Link>
                       </Button>
                     }
                   />
@@ -154,12 +154,9 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route path={''} element={<ProjectPage taskList={tasks} />} />{' '}
               <Route
-                path={'project'}
-                element={<ProjectPage taskList={tasks} />}
-              />{' '}
-              <Route
-                path={'/settings'}
+                path={'settings'}
                 element={
                   <Result
                     status="info"
@@ -167,14 +164,14 @@ function App() {
                     subTitle="Sorry, this page is still being developed"
                     extra={
                       <Button>
-                        <Link to="/project">To Overview</Link>
+                        <Link to="/">To Overview</Link>
                       </Button>
                     }
                   />
                 }
               ></Route>
               <Route
-                path={'/'}
+                path={'dashboard'}
                 element={
                   <Result
                     status="info"
@@ -182,14 +179,14 @@ function App() {
                     subTitle="Sorry, this page is still being developed"
                     extra={
                       <Button>
-                        <Link to="/project">To Overview</Link>
+                        <Link to="/">To Overview</Link>
                       </Button>
                     }
                   />
                 }
               ></Route>
               <Route
-                path={'/team'}
+                path={'team'}
                 element={
                   <Result
                     status="info"
@@ -197,7 +194,7 @@ function App() {
                     subTitle="Sorry, this page is still being developed"
                     extra={
                       <Button>
-                        <Link to="/project">To Overview</Link>
+                        <Link to="/">To Overview</Link>
                       </Button>
                     }
                   />

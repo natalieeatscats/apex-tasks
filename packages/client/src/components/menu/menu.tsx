@@ -50,7 +50,7 @@ const Menu = ({
             />
           </AntdMenu.Item>
           <AntdMenu.Item icon={<BarChartOutlined />}>
-            <Link to={'/'}>Dashboard</Link>
+            <Link to={'/dashboard'}>Dashboard</Link>
           </AntdMenu.Item>
           <AntdMenu.Item icon={<SettingOutlined />}>
             <Link to={'/settings'}>Settings</Link>
@@ -62,7 +62,7 @@ const Menu = ({
       )}
       <AntdMenu.Divider></AntdMenu.Divider>
       <AntdMenu.Item icon={<ProjectOutlined />}>
-        <Link to={'/project'}>Project Overview</Link>
+        <Link to={'/'}>Project Overview</Link>
       </AntdMenu.Item>
       {isAuth && (
         <AntdMenu.Item icon={<ProfileOutlined />}>
