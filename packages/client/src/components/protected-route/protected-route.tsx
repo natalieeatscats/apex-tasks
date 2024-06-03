@@ -1,15 +1,19 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 
-const ProtectedRoute = (props: {
+const ProtectedRoute = ({
+  guard,
+  redir,
+  children
+}: {
   guard: boolean;
   redir: string;
   children: React.ReactNode;
 }) => {
-  if (!props.guard) {
-    return <Navigate to={props.redir} />;
+  if (!guard) {
+    return <Navigate to={redir} />;
   }
-  return props.children;
+  return children;
 };
 
 export default ProtectedRoute;

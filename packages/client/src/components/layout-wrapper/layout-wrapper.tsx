@@ -6,12 +6,7 @@ import { ReactNode } from 'react';
 let message: MessageInstance;
 let notification: NotificationInstance;
 
-type Props = {
-  children: ReactNode;
-};
-
-export const LayoutWrapper = (props: Props) => {
-  const { children } = props;
+export const LayoutWrapper = ({ children }: { children: ReactNode }) => {
   const staticFunction = App.useApp();
   message = staticFunction.message;
   notification = staticFunction.notification;

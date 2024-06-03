@@ -3,14 +3,19 @@ import { Button, Col, List, Space } from 'antd';
 import './task-column.css';
 import TaskCard from '../task-card/task-card.tsx';
 
-function TaskColumn(props: {
+function TaskColumn({
+  tasks,
+  status,
+  onAdd,
+  span
+}: {
   tasks: Task[];
   status: 'notStarted' | 'inProgress' | 'done';
   onAdd?: () => void;
   span: number;
 }) {
-  const tasks = props.tasks
-    .filter((task) => task.status === props.status)
+  const tasksFiltered = tasks
+    .filter((task) => task.status === status)
     .sort(
       (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -21,7 +26,7 @@ function TaskColumn(props: {
     done: 'Done'
   };
   return (
-    <Col span={props.span}>
+    <Col span={span}>
       <List
         header={
           <div
@@ -31,9 +36,9 @@ function TaskColumn(props: {
               alignItems: 'center'
             }}
           >
-            {`${title[props.status]} - ${tasks.length}`}{' '}
-            {props.onAdd && (
-              <Button type="text" onClick={props.onAdd}>
+            {`${title[status]} - ${tasksFiltered.length}`}{' '}
+            {onAdd && (
+              <Button type="text" onClick={onAdd}>
                 Add
               </Button>
             )}

@@ -5,11 +5,7 @@ import { Content, Header } from 'antd/es/layout/layout';
 import TaskColumn from './task-column/task-column.tsx';
 import { useCreateTaskMutation } from '../../api/api.ts';
 
-type Props = {
-  taskList: Task[];
-};
-
-function Tasks({ taskList }: Props) {
+function Tasks({ taskList }: { taskList: Task[] }) {
   const [createTask] = useCreateTaskMutation();
   const taskListMutable = [...taskList];
   const onAdd = (status: Status) => {

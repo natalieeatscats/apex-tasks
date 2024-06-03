@@ -12,12 +12,12 @@ import { useSelector } from 'react-redux';
 import HeaderExtra from './header-extra/header-extra.tsx';
 import Text from 'antd/es/typography/Text';
 
-const TaskCard = (props: { task: Task }) => {
-  const createdAt = new Date(props.task.createdAt);
-  const updatedAt = new Date(props.task.updatedAt);
-  const taskId = props.task.id;
+const TaskCard = ({ task }: { task: Task }) => {
+  const createdAt = new Date(task.createdAt);
+  const updatedAt = new Date(task.updatedAt);
+  const taskId = task.id;
   const taskCreator = useSelector((state: State) => state.userState.users).find(
-    (user) => user.id === props.task.userId
+    (user) => user.id === task.userId
   )!;
   const isOwnTask =
     useSelector((state: State) => state.userState.activeUser?.id) ===
@@ -25,17 +25,17 @@ const TaskCard = (props: { task: Task }) => {
   const [hover, setHover] = useState(false);
   const [updateTask] = useUpdateTaskMutation();
   const [deleteTask] = useDeleteTaskMutation();
-  const [task] = Form.useForm();
+  const [taskForm] = Form.useForm();
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingDesc, setIsEditingDesc] = useState(false);
   const onConfirmName = () => {
-    task
+    taskForm
       .validateFields(['taskname'])
       .then(() => {
         updateTask({
           id: taskId,
           data: {
-            name: task.getFieldValue('taskname')
+            name: taskForm.getFieldValue('taskname')
           }
         });
         setIsEditingName(false);
@@ -45,17 +45,17 @@ const TaskCard = (props: { task: Task }) => {
       });
   };
   const onCancelName = () => {
-    task.resetFields(['taskname']);
+    taskForm.resetFields(['taskname']);
     setIsEditingName(false);
   };
   const onConfirmDesc = () => {
-    task
+    taskForm
       .validateFields(['taskdesc'])
       .then(() => {
         updateTask({
           id: taskId,
           data: {
-            desc: task.getFieldValue('taskdesc')
+            desc: taskForm.getFieldValue('taskdesc')
           }
         });
         setIsEditingDesc(false);
@@ -65,7 +65,7 @@ const TaskCard = (props: { task: Task }) => {
       });
   };
   const onCancelDesc = () => {
-    task.resetFields(['taskdesc']);
+    taskForm.resetFields(['taskdesc']);
     setIsEditingDesc(false);
   };
   const onChangeStatus = (status: 'notStarted' | 'inProgress' | 'done') => {
@@ -83,12 +83,12 @@ const TaskCard = (props: { task: Task }) => {
   return (
     <Card
       hoverable
-      key={props.task.id}
+      key={task.id}
       style={{ margin: '10px' }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
-      <Form form={task}>
+      <Form form={taskForm}>
         <FormItem
           style={{ marginBottom: 0 }}
           rules={[
@@ -110,10 +110,10 @@ const TaskCard = (props: { task: Task }) => {
           <Row>
             <Col span={16}>
               <Input
-                defaultValue={props.task.name}
+                defaultValue={task.name}
                 variant="borderless"
                 onChange={(e) => {
-                  task.setFieldsValue({ taskname: e.target.value });
+                  taskForm.setFieldsValue({ taskname: e.target.value });
                   setIsEditingName(true);
                 }}
                 onPressEnter={onConfirmName}
@@ -139,7 +139,7 @@ const TaskCard = (props: { task: Task }) => {
                       createdAt={createdAt}
                       updatedAt={updatedAt}
                       hover={hover}
-                      status={props.task.status}
+                      status={task.status}
                       changeStatus={onChangeStatus}
                       deleteTask={onDeleteTask}
                       displayMenu={isOwnTask}
@@ -164,10 +164,10 @@ const TaskCard = (props: { task: Task }) => {
           <TextArea
             autoSize={{ minRows: 1, maxRows: 10 }}
             variant="borderless"
-            defaultValue={props.task.desc}
+            defaultValue={task.desc}
             placeholder="No description"
             onChange={(e) => {
-              task.setFieldsValue({ taskdesc: e.target.value });
+              taskForm.setFieldsValue({ taskdesc: e.target.value });
               setIsEditingDesc(true);
             }}
             onPressEnter={onConfirmDesc}
