@@ -10,7 +10,7 @@ const EditingButtons = ({
   onCancel: () => void;
   isEditing: boolean;
 }) => {
-  if (!isEditing) return <div style={{ display: 'none' }} />;
+  if (!isEditing) return null;
   return (
     <div>
       <ConfigProvider

@@ -16,6 +16,8 @@ import { setToken } from './api/store/slices/api/api-slice.ts';
 import ProjectPage from './pages/project/project.tsx';
 import { generateColor } from 'antd/es/color-picker/util';
 import { generateColorPalettes } from 'antd/es/theme/themes/default/colors';
+import ProtectedRoute from './components/protected-route/protected-route.tsx';
+import { getContainerColor, getTextColor } from './helpers/theme.helper.ts';
 
 function App() {
   const tasks = useSelector((state: State) => state.tasksState.tasks);
@@ -41,32 +43,19 @@ function App() {
       setColor({
         primary: palette[5],
         secondary: palette[2],
-        text: getTextColor(palette[1]),
-        container: getContainerColor(palette[10]),
+        text: getTextColor(palette[1], initialColor),
+        container: getContainerColor(palette[10], initialColor),
         dark: isDark
       });
     } else {
       setColor({
         primary: palette[5],
         secondary: palette[2],
-        text: getTextColor(palette[10]),
-        container: getContainerColor(palette[1]),
+        text: getTextColor(palette[10], initialColor),
+        container: getContainerColor(palette[1], initialColor),
         dark: isDark
       });
     }
-  };
-
-  const getTextColor = (hex: string) => {
-    const hsb = generateColor(hex).toHsb();
-    hsb.s *= 0.5;
-    hsb.b = generateColor(initialColor).toHsb().b > 0.7 ? 60 : 80;
-    return generateColor(hsb).toHexString();
-  };
-  const getContainerColor = (hex: string) => {
-    const hsb = generateColor(hex).toHsb();
-    hsb.s *= 0.7;
-    hsb.b = generateColor(initialColor).toHsb().b < 0.7 ? hsb.b * 0.7 : hsb.b;
-    return generateColor(hsb).toHexString();
   };
 
   const [color, setColor] = useState(() => {
@@ -75,16 +64,16 @@ function App() {
       return {
         primary: palette[5],
         secondary: palette[2],
-        text: getTextColor(palette[1]),
-        container: getContainerColor(palette[10]),
+        text: getTextColor(palette[1], initialColor),
+        container: getContainerColor(palette[10], initialColor),
         dark: isDark
       };
     } else {
       return {
         primary: palette[5],
         secondary: palette[2],
-        text: getTextColor(palette[10]),
-        container: getContainerColor(palette[1]),
+        text: getTextColor(palette[10], initialColor),
+        container: getContainerColor(palette[1], initialColor),
         dark: isDark
       };
     }
@@ -127,7 +116,11 @@ function App() {
               path={'/'}
             >
               <Route
-                element={Tasks({ taskList: userTasks })}
+                element={
+                  <ProtectedRoute guard={user !== null} redir={'/login'}>
+                    <Tasks taskList={userTasks} />
+                  </ProtectedRoute>
+                }
                 path={'tasks'}
               ></Route>
               <Route
@@ -138,19 +131,78 @@ function App() {
                     subTitle="Sorry, the page you visited does not exist."
                     extra={
                       <Button type="primary">
-                        <Link to={'/'}>Back Home</Link>
+                        <Link to={'/project'}>To Overview</Link>
                       </Button>
                     }
                   />
                 }
                 path={'*'}
               ></Route>
-              <Route path={'login'} element={<LoginPage />} />
-              <Route path={'register'} element={<RegisterPage />} />
+              <Route
+                path={'login'}
+                element={
+                  <ProtectedRoute guard={user === null} redir={'/tasks'}>
+                    <LoginPage />{' '}
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={'register'}
+                element={
+                  <ProtectedRoute guard={user === null} redir={'/tasks'}>
+                    <RegisterPage />
+                  </ProtectedRoute>
+                }
+              />
               <Route
                 path={'project'}
                 element={<ProjectPage taskList={tasks} />}
-              />
+              />{' '}
+              <Route
+                path={'/settings'}
+                element={
+                  <Result
+                    status="info"
+                    title="Under Construction"
+                    subTitle="Sorry, this page is still being developed"
+                    extra={
+                      <Button>
+                        <Link to="/project">To Overview</Link>
+                      </Button>
+                    }
+                  />
+                }
+              ></Route>
+              <Route
+                path={'/'}
+                element={
+                  <Result
+                    status="info"
+                    title="Under Construction"
+                    subTitle="Sorry, this page is still being developed"
+                    extra={
+                      <Button>
+                        <Link to="/project">To Overview</Link>
+                      </Button>
+                    }
+                  />
+                }
+              ></Route>
+              <Route
+                path={'/team'}
+                element={
+                  <Result
+                    status="info"
+                    title="Under Construction"
+                    subTitle="Sorry, this page is still being developed"
+                    extra={
+                      <Button>
+                        <Link to="/project">To Overview</Link>
+                      </Button>
+                    }
+                  />
+                }
+              ></Route>
             </Route>
           </Routes>
         </ConfigProvider>

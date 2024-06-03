@@ -6,6 +6,8 @@ import {
 } from './store/slices/user/user-slice.ts';
 import { setAuth } from './store/slices/api/api-slice.ts';
 import { setTasks, updateTasks } from './store/slices/tasks/tasks-slice.ts';
+import { showError } from '../helpers/show-error.helper.ts';
+import { isApiErrorResponse } from '../helpers/check-api-error.helper.ts';
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API_URL }),
@@ -51,7 +53,9 @@ export const api = createApi({
           dispatch(updateTasks(data));
           dispatch(updateActiveUser({ tasks: data }));
         } catch (e) {
-          console.error(e);
+          if (isApiErrorResponse(e)) {
+            showError({ status: e?.error?.status, message: e.error.data });
+          } else console.error(e);
         }
       }
     }),
@@ -70,7 +74,9 @@ export const api = createApi({
           const { data } = await queryFulfilled;
           dispatch(setActiveUser(data.user));
         } catch (e) {
-          console.error(e);
+          if (isApiErrorResponse(e)) {
+            showError({ status: e?.error?.status, message: e.error.data });
+          } else console.error(e);
         }
       }
     }),
@@ -124,7 +130,9 @@ export const api = createApi({
           dispatch(setAuth(true));
           dispatch(setActiveUser(user));
         } catch (e) {
-          console.error(e);
+          if (isApiErrorResponse(e)) {
+            showError({ status: e?.error?.status, message: e.error.data });
+          } else console.error(e);
         }
       }
     }),
@@ -143,7 +151,9 @@ export const api = createApi({
           dispatch(setAuth(true));
           dispatch(setActiveUser(user));
         } catch (e) {
-          console.error(e);
+          if (isApiErrorResponse(e)) {
+            showError({ status: e?.error?.status, message: e.error.data });
+          } else console.error(e);
         }
       }
     }),
@@ -163,7 +173,9 @@ export const api = createApi({
           dispatch(setAuth(true));
           dispatch(setActiveUser(user));
         } catch (e) {
-          console.error(e);
+          if (isApiErrorResponse(e)) {
+            showError({ status: e?.error?.status, message: e.error.data });
+          } else console.error(e);
         }
       }
     }),
@@ -183,7 +195,9 @@ export const api = createApi({
           dispatch(setAuth(false));
           dispatch(setActiveUser(null));
         } catch (e) {
-          console.error(e);
+          if (isApiErrorResponse(e)) {
+            showError({ status: e?.error?.status, message: e.error.data });
+          } else console.error(e);
         }
       }
     })

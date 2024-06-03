@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 const RegisterPage = () => {
   const [register_form] = Form.useForm();
-  const [register] = useRegisterMutation();
+  const [register, { isSuccess, error }] = useRegisterMutation();
   const navigate = useNavigate();
 
   const onFinish = () => {
@@ -16,7 +16,9 @@ const RegisterPage = () => {
     ]);
     console.log(values);
     register(values);
-    navigate('/tasks');
+    if (isSuccess) {
+      navigate('/tasks');
+    }
   };
   return (
     <div
@@ -38,6 +40,7 @@ const RegisterPage = () => {
         <Form.Item
           name="email"
           rules={[{ required: true, message: 'Please input your E-mail!' }]}
+          validateStatus={error ? 'error' : ''}
         >
           <Input
             prefix={<UserOutlined className="site-form-item-icon" />}
@@ -47,6 +50,7 @@ const RegisterPage = () => {
         <Form.Item
           name="name"
           rules={[{ required: true, message: 'Please input your name!' }]}
+          validateStatus={error ? 'error' : ''}
         >
           <Input
             prefix={<UserOutlined className="site-form-item-icon" />}
@@ -56,6 +60,7 @@ const RegisterPage = () => {
         <Form.Item
           name="password"
           rules={[{ required: true, message: 'Please input your Password!' }]}
+          validateStatus={error ? 'error' : ''}
         >
           <Input
             prefix={<LockOutlined className="site-form-item-icon" />}
@@ -78,6 +83,7 @@ const RegisterPage = () => {
               }
             })
           ]}
+          validateStatus={error ? 'error' : ''}
         >
           <Input
             prefix={<LockOutlined className="site-form-item-icon" />}

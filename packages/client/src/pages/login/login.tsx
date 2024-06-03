@@ -1,4 +1,4 @@
-import { Alert, Button, Flex, Form, Input, Space, Spin } from 'antd';
+import { Button, Flex, Form, Input, Space, Spin } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLoginMutation } from '../../api/api.ts';
@@ -85,13 +85,6 @@ const LoginPage = () => {
             </Form.Item>
           )}
         </Flex>
-        {error && (
-          <Alert
-            // @ts-expect-error У RTK странная типизация ошибок
-            message={JSON.stringify(error.data.message)}
-            type="error"
-          ></Alert>
-        )}
       </Form>
     </div>
   );

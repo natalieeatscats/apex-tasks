@@ -1,4 +1,4 @@
-import { Card, Flex, Form, Input } from 'antd';
+import { Card, Col, Flex, Form, Input, Row } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { State, Task } from '../../../types.ts';
 import { useState } from 'react';
@@ -8,8 +8,8 @@ import {
 } from '../../../api/api.ts';
 import FormItem from 'antd/es/form/FormItem';
 import EditingButtons from './editing-buttons/editing-buttons.tsx';
-import HeaderExtra from './header-extra/header-extra.tsx';
 import { useSelector } from 'react-redux';
+import HeaderExtra from './header-extra/header-extra.tsx';
 import Text from 'antd/es/typography/Text';
 
 const TaskCard = (props: { task: Task }) => {
@@ -25,18 +25,17 @@ const TaskCard = (props: { task: Task }) => {
   const [hover, setHover] = useState(false);
   const [updateTask] = useUpdateTaskMutation();
   const [deleteTask] = useDeleteTaskMutation();
-  const [taskname] = Form.useForm();
-  const [taskdesc] = Form.useForm();
+  const [task] = Form.useForm();
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingDesc, setIsEditingDesc] = useState(false);
   const onConfirmName = () => {
-    taskname
+    task
       .validateFields(['taskname'])
       .then(() => {
         updateTask({
           id: taskId,
           data: {
-            name: taskname.getFieldValue('taskname')
+            name: task.getFieldValue('taskname')
           }
         });
         setIsEditingName(false);
@@ -46,17 +45,17 @@ const TaskCard = (props: { task: Task }) => {
       });
   };
   const onCancelName = () => {
-    taskname.resetFields();
+    task.resetFields(['taskname']);
     setIsEditingName(false);
   };
   const onConfirmDesc = () => {
-    taskdesc
+    task
       .validateFields(['taskdesc'])
       .then(() => {
         updateTask({
           id: taskId,
           data: {
-            desc: taskdesc.getFieldValue('taskdesc')
+            desc: task.getFieldValue('taskdesc')
           }
         });
         setIsEditingDesc(false);
@@ -66,7 +65,7 @@ const TaskCard = (props: { task: Task }) => {
       });
   };
   const onCancelDesc = () => {
-    taskdesc.resetFields();
+    task.resetFields(['taskdesc']);
     setIsEditingDesc(false);
   };
   const onChangeStatus = (status: 'notStarted' | 'inProgress' | 'done') => {
@@ -83,82 +82,92 @@ const TaskCard = (props: { task: Task }) => {
 
   return (
     <Card
-      title={
-        <Form form={taskname}>
-          <FormItem
-            style={{ marginBottom: 0 }}
-            rules={[
-              {
-                required: true,
-
-                type: 'string',
-
-                min: 8,
-
-                max: 40
-              }
-            ]}
-            name="taskname"
-            required
-          >
-            <Input
-              defaultValue={props.task.name}
-              variant="borderless"
-              onChange={(e) => {
-                taskname.setFieldsValue({ taskname: e.target.value });
-                setIsEditingName(true);
-              }}
-              onPressEnter={onConfirmName}
-              disabled={!isOwnTask}
-            ></Input>
-          </FormItem>
-        </Form>
-      }
-      extra={
-        isEditingName ? (
-          <EditingButtons
-            onConfirm={onConfirmName}
-            onCancel={onCancelName}
-            isEditing={isEditingName}
-          />
-        ) : (
-          <Flex align="center">
-            {!isOwnTask && (
-              <Text type="secondary">{`${taskCreator.name},`}&nbsp;</Text>
-            )}
-            <HeaderExtra
-              createdAt={createdAt}
-              updatedAt={updatedAt}
-              hover={hover}
-              status={props.task.status}
-              changeStatus={onChangeStatus}
-              deleteTask={onDeleteTask}
-              displayMenu={isOwnTask}
-            />
-          </Flex>
-        )
-      }
       hoverable
       key={props.task.id}
       style={{ margin: '10px' }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
-      <Form form={taskdesc}>
+      <Form form={task}>
+        <FormItem
+          style={{ marginBottom: 0 }}
+          rules={[
+            {
+              required: true,
+
+              type: 'string',
+
+              min: 8,
+
+              max: 40,
+
+              message: 'Task name must be between 8 and 40 characters long'
+            }
+          ]}
+          name="taskname"
+          required
+        >
+          <Row>
+            <Col span={16}>
+              <Input
+                defaultValue={props.task.name}
+                variant="borderless"
+                onChange={(e) => {
+                  task.setFieldsValue({ taskname: e.target.value });
+                  setIsEditingName(true);
+                }}
+                onPressEnter={onConfirmName}
+                disabled={!isOwnTask}
+              ></Input>
+            </Col>
+            <Col span={8}>
+              <Flex justify="end" align="center" style={{ height: '100%' }}>
+                {isEditingName ? (
+                  <EditingButtons
+                    onConfirm={onConfirmName}
+                    onCancel={onCancelName}
+                    isEditing={isEditingName}
+                  />
+                ) : (
+                  <Flex align="center">
+                    {!isOwnTask && (
+                      <Text type="secondary">
+                        {`${taskCreator.name},`}&nbsp;
+                      </Text>
+                    )}
+                    <HeaderExtra
+                      createdAt={createdAt}
+                      updatedAt={updatedAt}
+                      hover={hover}
+                      status={props.task.status}
+                      changeStatus={onChangeStatus}
+                      deleteTask={onDeleteTask}
+                      displayMenu={isOwnTask}
+                    />
+                  </Flex>
+                )}
+              </Flex>
+            </Col>
+          </Row>
+        </FormItem>{' '}
         <FormItem
           style={{ marginBottom: 0 }}
           name="taskdesc"
-          rules={[{ type: 'string', max: 3000 }]}
+          rules={[
+            {
+              type: 'string',
+              max: 3000,
+              message: 'Task description can not be longer than 3000 characters'
+            }
+          ]}
         >
           <TextArea
             autoSize={{ minRows: 1, maxRows: 10 }}
-            maxLength={3000}
-            showCount={isEditingDesc}
             variant="borderless"
             defaultValue={props.task.desc}
             placeholder="No description"
             onChange={(e) => {
-              taskdesc.setFieldsValue({ taskdesc: e.target.value });
+              task.setFieldsValue({ taskdesc: e.target.value });
               setIsEditingDesc(true);
             }}
             onPressEnter={onConfirmDesc}
